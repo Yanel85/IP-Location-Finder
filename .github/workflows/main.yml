@@ -1,0 +1,22 @@
+name: Release Extension Zip
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@latest
+
+      - name: Zip extension folder
+        run: |
+          zip -r extension.zip extension
+
+      - name: Upload Release Asset
+        uses: ncipollo/release-action@v1
+        with:
+          files: IP-Location-Finder.zip
