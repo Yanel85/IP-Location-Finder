@@ -12,11 +12,17 @@ A Chrome extension that identifies the geographic location of IP addresses on a 
 
 ## Installation
 
-1.  Download or clone this repository.
+* Offline install :
+
+1.  Download [Releases](https://github.com/Yanel85/IP-Location-Finder/releases).
 2.  Open Chrome browser and navigate to `chrome://extensions/`.
 3.  Enable "Developer mode" in the top right corner.
 4.  Click "Load unpacked" and select the extension directory.
 5.  The extension will now be installed.
+
+* Online:
+
+  Chrome Web Store 
 
 ## Usage
 
