@@ -1,4 +1,4 @@
-name: Build Chrome Extension
+name: Build IP-Location-Finder Chrome Extension
 
 on:
   push:
@@ -26,10 +26,12 @@ jobs:
         run: |
           web-ext build \
             --artifacts-dir=dist \
-            --overwrite-dest
+            --source-dir=extension \
+            --overwrite-dest \
+            --filename="IP-Location-Finder.crx"
 
       - name: Upload CRX
         uses: actions/upload-artifact@v4
         with:
-          name: IP-Location-Finder
-          path: dist/*.crx
+          name: IP-Location-Finder-crx
+          path: dist/IP-Location-Finder.crx
