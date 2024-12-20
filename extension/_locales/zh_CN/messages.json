@@ -1,26 +1,42 @@
 {
-    "extName": {
-        "message": "IP 地址定位器",
-        "description": "插件名称"
-    },
-     "extDescription": {
-        "message": "查找页面上的 IP 地址的地理位置。",
-        "description": "插件描述"
-    },
-     "optionsTitle":{
-        "message": "IP 地址定位器选项",
-        "description":"选项页面标题"
-     },
-     "optionsHeading": {
-       "message": "IP 地址定位器选项",
-        "description":"选项页面标题"
-    },
-     "optionsApiLabel": {
-        "message": "选择 API：",
-        "description":"选择API标签"
-    },
-     "optionsSaved": {
-         "message": "设置已保存",
-        "description": "设置已保存提示"
-     }
+"extName": {
+"message": "IP 地址定位器",
+"description": "插件名称"
+},
+"extDescription": {
+"message": "查找页面上的 IP 地址的地理位置。",
+"description": "插件描述"
+},
+"optionsTitle":{
+"message": "IP 地址定位器选项",
+"description":"选项页面标题"
+},
+"optionsHeading": {
+"message": "IP 地址定位器选项",
+"description": "选项页面标题"
+},
+"optionsApiLabel": {
+"message": "选择 API：",
+"description": "选择API标签"
+},
+"optionsSaved": {
+"message": "设置已保存",
+"description": "设置已保存提示"
+},
+"contextMenuTitle":{
+"message":"查找 IP 地址归属地",
+"description":"上下文菜单标题"
+},
+"errorNoLocation": {
+"message":"无法获取该 IP 地址对应的国家/地区",
+"description":"API 无法找到 IP 地址位置时的错误消息"
+},
+"errorInvalidIp": {
+"message":"选中的不是有效的 IP 地址",
+"description":"选中不是有效IP地址时的错误消息"
+},
+"errorFetchLocation": {
+"message":"查询 IP 地址归属地过程中发生错误:",
+"description":"查询位置发生错误时的提示"
+}
 }

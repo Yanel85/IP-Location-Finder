@@ -1,26 +1,42 @@
 {
-"extName": {
-"message": "IPアドレスロケーター",
-"description": "拡張機能の名前"
-},
-"extDescription": {
-"message": "ページ上のIPアドレスの地理的な場所を検索します。",
-"description": "拡張機能の説明"
-},
-"optionsTitle":{
-"message":"IPアドレスロケーターオプション",
-"description": "オプションページのタイトル"
-},
-"optionsHeading": {
-"message": "IPアドレスロケーターオプション",
-"description": "オプションページのタイトル"
-},
-"optionsApiLabel": {
-"message": "API を選択:",
-"description": "API選択のラベル"
-},
-"optionsSaved": {
-"message": "設定が保存されました",
-"description": "設定が保存されたメッセージ"
-}
+    "extName": {
+        "message": "IPアドレスロケーター",
+         "description": "拡張機能の名前"
+    },
+    "extDescription": {
+        "message": "ページ上のIPアドレスの地理的な場所を検索します。",
+        "description": "拡張機能の説明"
+    },
+     "optionsTitle":{
+        "message":"IPアドレスロケーターオプション",
+        "description":"オプションページのタイトル"
+    },
+    "optionsHeading": {
+         "message": "IPアドレスロケーターオプション",
+         "description": "オプションページのタイトル"
+   },
+   "optionsApiLabel": {
+      "message": "API を選択:",
+      "description": "API選択のラベル"
+  },
+  "optionsSaved": {
+    "message": "設定が保存されました",
+    "description": "設定が保存されたメッセージ"
+   },
+   "contextMenuTitle":{
+         "message":"IPアドレスの所在地を検索",
+         "description":"コンテキストメニューのタイトル"
+   },
+   "errorNoLocation": {
+         "message":"この IP アドレスの場所を取得できません",
+           "description":"APIがIPアドレスの場所を見つけられない場合のエラーメッセージ"
+  },
+    "errorInvalidIp": {
+         "message":"選択したテキストは有効な IP アドレスではありません",
+         "description": "選択したテキストが有効なIPアドレスではない場合のエラーメッセージ"
+   },
+     "errorFetchLocation": {
+        "message":"IPアドレスの所在地を取得中にエラーが発生しました:",
+         "description": "取得中に発生したエラーメッセージ"
+    }
 }

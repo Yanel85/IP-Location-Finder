@@ -9,7 +9,6 @@ const apiUrls = {
     "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace" // 需要解析响应
 };
 
-
 // Load API URL from storage
 chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
     currentApiUrl = items.apiUrl;
@@ -19,10 +18,11 @@ chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "ipLocationFinder",
-        title: "查找 IP 地址归属地",
+        title: chrome.i18n.getMessage("contextMenuTitle"),
         contexts: ["selection"],
     });
 });
+
 
 // Context menu click handler
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -59,9 +59,10 @@ function sendError(message, tabId) {
 
 // Generic IP lookup function
 async function queryIpLocation(ip, tabId) {
-    console.log("background.js: queryIpLocation called, ip:", ip, "tabId", tabId)
+    console.log("background.js: queryIpLocation called, ip:", ip, "tabId", tabId);
     try {
         const apiUrl = currentApiUrl.replace("{ip}", ip);
+
         if (currentApiUrl === apiUrls["cloudflare"]) {
             const response = await fetch(apiUrl);
             if (!response.ok) {
@@ -75,7 +76,7 @@ async function queryIpLocation(ip, tabId) {
                 const countryCode = countryLine.split('=')[1];
                 sendCountryInfo(countryCode, null, tabId);
             } else {
-                sendError("无法获取该 IP 地址对应的国家/地区", tabId);
+                sendError(chrome.i18n.getMessage("errorNoLocation"), tabId);
                 return;
             }
         } else {
@@ -96,7 +97,7 @@ async function queryIpLocation(ip, tabId) {
         }
     } catch (error) {
         console.error("Error fetching location:", error);
-        sendError(`查询过程中发生错误: ${error.message}`, tabId);
+        sendError(`${chrome.i18n.getMessage("errorFetchLocation")}: ${error.message}`, tabId);
     }
 }
 
@@ -104,7 +105,7 @@ async function handleIpQuery(ip, tabId) {
     if (isValidIP(ip)) {
         await queryIpLocation(ip, tabId);
     } else {
-        sendError("选中的不是有效的 IP 地址", tabId);
+        sendError(chrome.i18n.getMessage("errorInvalidIp"), tabId);
     }
 }
 
