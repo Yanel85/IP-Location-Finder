@@ -1,0 +1,35 @@
+name: Build Chrome Extension
+
+on:
+  push:
+    branches:
+      - main # Or the branch you use for releases
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Or your preferred node version
+
+      - name: Install web-ext
+        run: npm install --global web-ext
+
+      - name: Build CRX
+        run: |
+          web-ext build \
+            --artifacts-dir=dist \
+            --overwrite-dest
+
+      - name: Upload CRX
+        uses: actions/upload-artifact@v4
+        with:
+          name: IP-Location-Finder
+          path: dist/*.crx
