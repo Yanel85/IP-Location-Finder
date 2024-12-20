@@ -101,7 +101,6 @@ function showTooltip(text, isError = false) {
         removeTooltip();
     }, 3000);
 }
-
 // Remove tooltip
 function removeTooltip() {
     if (tooltip) {
@@ -119,12 +118,11 @@ function insertLocation(countryCode, city) {
     const range = selection.getRangeAt(0);
     const selectedTextNode = range.startContainer;
 
-
     if (selectedTextNode.nodeType !== Node.TEXT_NODE) return;
     const selectedText = selectedTextNode.textContent;
     const ipIndex = selectedText.indexOf(currentSelectedText);
-    if (ipIndex === -1) return;
 
+    if (ipIndex === -1) return;
     removeLocationSpan(currentSelectedText);
 
     locationSpanElementMap.set(currentSelectedText, document.createElement('span'));
@@ -147,17 +145,17 @@ function insertLocation(countryCode, city) {
     }
     locationSpan.innerHTML = locationText;
 
+
     const beforeIpTextNode = document.createTextNode(selectedText.substring(0, ipIndex + currentSelectedText.length));
     const afterIpTextNode = document.createTextNode(selectedText.substring(ipIndex + currentSelectedText.length));
 
     selectedTextNode.textContent = '';
-
     selectedTextNode.parentNode.insertBefore(beforeIpTextNode, selectedTextNode);
     selectedTextNode.parentNode.insertBefore(locationSpan, selectedTextNode);
     selectedTextNode.parentNode.insertBefore(afterIpTextNode, selectedTextNode);
-
     window.getSelection().empty();
 }
+
 
 function removeLocationSpan(ipText) {
     if (locationSpanElementMap.has(ipText)) {

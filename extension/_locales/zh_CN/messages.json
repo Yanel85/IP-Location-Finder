@@ -1,0 +1,26 @@
+{
+    "extName": {
+        "message": "IP 地址定位器",
+        "description": "插件名称"
+    },
+     "extDescription": {
+        "message": "查找页面上的 IP 地址的地理位置。",
+        "description": "插件描述"
+    },
+     "optionsTitle":{
+        "message": "IP 地址定位器选项",
+        "description":"选项页面标题"
+     },
+     "optionsHeading": {
+       "message": "IP 地址定位器选项",
+        "description":"选项页面标题"
+    },
+     "optionsApiLabel": {
+        "message": "选择 API：",
+        "description":"选择API标签"
+    },
+     "optionsSaved": {
+         "message": "设置已保存",
+        "description": "设置已保存提示"
+     }
+}

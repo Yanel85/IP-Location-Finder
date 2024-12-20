@@ -1,0 +1,26 @@
+ {
+    "extName": {
+        "message": "IP 주소 로케이터",
+        "description": "확장 프로그램 이름"
+    },
+    "extDescription": {
+       "message": "페이지에서 IP 주소의 지리적 위치를 찾습니다.",
+        "description": "확장 프로그램 설명"
+     },
+     "optionsTitle":{
+         "message": "IP 주소 로케이터 옵션",
+         "description": "옵션 페이지 제목"
+    },
+    "optionsHeading": {
+        "message": "IP 주소 로케이터 옵션",
+        "description": "옵션 페이지 제목"
+   },
+    "optionsApiLabel": {
+      "message": "API 선택:",
+     "description": "API 선택을 위한 라벨"
+   },
+    "optionsSaved": {
+        "message": "설정이 저장되었습니다.",
+        "description": "설정 저장됨 메시지"
+    }
+}

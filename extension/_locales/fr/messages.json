@@ -1,0 +1,26 @@
+{
+    "extName": {
+        "message": "Localisateur d'adresse IP",
+        "description": "Nom de l'extension"
+     },
+      "extDescription": {
+        "message":"Trouve la localisation géographique des adresses IP sur une page.",
+         "description": "Description de l'extension"
+    },
+    "optionsTitle":{
+       "message": "Options du localisateur d'adresse IP",
+        "description":"Titre de la page d'options"
+   },
+   "optionsHeading": {
+     "message":"Options du localisateur d'adresse IP",
+     "description": "Titre de la page d'options"
+  },
+  "optionsApiLabel": {
+     "message":"Sélectionner l'API :",
+     "description":"Label pour la sélection de l'API"
+   },
+   "optionsSaved": {
+       "message":"Paramètres enregistrés",
+        "description":"Message Enregistré"
+  }
+}

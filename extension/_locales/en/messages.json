@@ -1,0 +1,26 @@
+{
+    "extName": {
+        "message": "IP Location Finder",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "Finds the geographical location of IP addresses on a page.",
+        "description": "Extension description"
+    },
+    "optionsTitle":{
+        "message": "IP Location Finder Options",
+         "description":"Options page title"
+    },
+    "optionsHeading": {
+      "message": "IP Location Finder Options",
+       "description": "Options page heading"
+    },
+     "optionsApiLabel": {
+      "message": "Select API:",
+        "description": "Label for API select"
+    },
+      "optionsSaved": {
+        "message": "Settings saved",
+         "description": "Options Saved Message"
+    }
+}

@@ -1,0 +1,26 @@
+{
+   "extName": {
+         "message": "Поиск местоположения IP-адреса",
+         "description":"Название расширения"
+   },
+     "extDescription": {
+         "message": "Находит географическое положение IP-адресов на странице.",
+          "description": "Описание расширения"
+  },
+    "optionsTitle":{
+       "message":"Настройки поиска местоположения IP-адреса",
+         "description": "Название страницы настроек"
+   },
+  "optionsHeading":{
+      "message":"Настройки поиска местоположения IP-адреса",
+      "description": "Название страницы настроек"
+  },
+  "optionsApiLabel": {
+        "message": "Выбрать API:",
+       "description": "Метка выбора API"
+   },
+   "optionsSaved": {
+        "message": "Настройки сохранены",
+         "description": "Сообщение о сохранении настроек"
+    }
+ }

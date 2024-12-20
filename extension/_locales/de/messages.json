@@ -1,0 +1,26 @@
+{
+"extName": {
+"message": "IP-Adressenfinder",
+"description": "Name der Erweiterung"
+},
+"extDescription": {
+"message":"Findet den geografischen Standort von IP-Adressen auf einer Seite.",
+"description": "Beschreibung der Erweiterung"
+},
+"optionsTitle":{
+"message":"Optionen des IP-Adressenfinders",
+"description":"Optionen Seitentitel"
+},
+"optionsHeading": {
+"message":"Optionen des IP-Adressenfinders",
+"description":"Optionen Seitentitel"
+},
+"optionsApiLabel": {
+"message":"API auswählen:",
+"description": "Bezeichnung für API auswählen"
+},
+"optionsSaved": {
+"message":"Einstellungen gespeichert",
+"description": "Meldung Gespeichert"
+}
+}

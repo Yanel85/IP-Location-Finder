@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title>IP Location Finder Options</title>
+        <title id="optionsTitle"></title>
         <style>
             body {
                 padding: 10px;
@@ -23,11 +23,11 @@
     </head>
 
     <body>
-        <h2>IP Location Finder Options</h2>
-        <label for="apiUrl">选择 API:</label>
+        <h2 id="optionsHeading"></h2>
+        <label for="apiUrl" id="optionsApiLabel"></label>
         <select id="apiUrl">
-            <option value="https://ipapi.co/{ip}/country">ipapi.co</option>
-            <option value="https://ipinfo.io/{ip}/country">ipinfo.io</option>
+            <option value="https://ipapi.co/{ip}/json">ipapi.co</option>
+            <option value="https://ipinfo.io/{ip}/json">ipinfo.io</option>
             <option value="https://www.cloudflare.com/cdn-cgi/trace">cloudflare</option>
         </select>
         <div id="status"></div>
