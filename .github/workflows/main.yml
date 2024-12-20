@@ -19,16 +19,20 @@ jobs:
         with:
           node-version: 18 # Or your preferred node version
 
-      - name: Install web-ext
-        run: npm install --global web-ext
+      - name: Install web-ext and chrome-pack
+        run: npm install --global web-ext chrome-pack
 
-      - name: Build CRX
+      - name: Build ZIP
         run: |
           web-ext build \
             --artifacts-dir=dist \
             --source-dir=extension \
             --overwrite-dest \
-            --filename="IP-Location-Finder.crx"
+            --filename="IP-Location-Finder.zip"
+
+      - name: Convert ZIP to CRX
+        run: |
+          chrome-pack dist/IP-Location-Finder.zip dist/IP-Location-Finder.crx --pack-extension=false
 
       - name: Upload CRX
         uses: actions/upload-artifact@v4
