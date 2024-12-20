@@ -8,10 +8,7 @@ A Chrome extension that identifies the geographic location of IP addresses on a 
 *   **Geographic Location:** Displays the country and city (when available) associated with the selected IP address.
 *   **Flag Icon & Country Code:** Displays a flag icon and country code alongside the location information.
 *   **Flexible API:** Uses an external API for IP geolocation lookup, with customizable API options in the extension's settings.
-*   **Error Handling:** Shows informative tooltips for invalid IP addresses or lookup errors.
 *   **Clean Display:** Displays the location in the format: `(FlagIcon CountryCode, City)`. If city is unavailable, only shows `(FlagIcon CountryCode)`.
-*   **Per Selection Display:** Only displays the IP location for the currently selected IP Address.
-*   **Small Font Size:** IP location text size is set to `0.6em`.
 
 ## Installation
 
