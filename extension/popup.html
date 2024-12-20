@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>IP Location Finder Options</title>
+        <style>
+            body {
+                padding: 10px;
+                width: 280px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            select {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>IP Location Finder Options</h2>
+        <label for="apiUrl">选择 API:</label>
+        <select id="apiUrl">
+            <option value="https://ipapi.co/{ip}/country">ipapi.co</option>
+            <option value="https://ipinfo.io/{ip}/country">ipinfo.io</option>
+            <option value="https://www.cloudflare.com/cdn-cgi/trace">cloudflare</option>
+        </select>
+        <div id="status"></div>
+        <script src="popup.js"></script>
+    </body>
+
+</html>

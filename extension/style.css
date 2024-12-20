@@ -1,0 +1,10 @@
+.ip-location-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: 2px !important;
+    margin-bottom: -5px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    box-sizing: content-box !important;
+    background-size: contain !important;
+}
