@@ -11,10 +11,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
           
@@ -34,7 +34,7 @@ jobs:
           zip -r extension.zip ./*
 
       - name: Upload zip package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: extension-package
           path: extension/extension.zip
