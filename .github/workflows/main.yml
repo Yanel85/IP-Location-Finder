@@ -11,49 +11,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18 # Or your preferred node version
-
-      - name: Install web-ext and chrome-pack
-        run: npm install --global web-ext chrome-pack
-
-      - name: Build ZIP
+      - name: Zip Extension Folder
         run: |
-          web-ext build \
-            --artifacts-dir=dist \
-            --source-dir=extension \
-            --overwrite-dest \
-            --filename="IP-Location-Finder.zip"
+          cd extension
+          zip -r ../IP-Location-Finder.zip *
+          cd ..
 
-      - name: Convert ZIP to CRX
-        run: |
-          chrome-pack dist/IP-Location-Finder.zip dist/IP-Location-Finder.crx --pack-extension=false
-
-      - name: Upload CRX
+      - name: Upload ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: IP-Location-Finder-crx
-          path: dist/IP-Location-Finder.crx
+          name: IP-Location-Finder-zip
+          path: IP-Location-Finder.zip
 
   release:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
       - name: Download ZIP Artifact
         uses: actions/download-artifact@v4
         with:
-          name: IP-Location-Finder-crx
-          path: .
+            name: IP-Location-Finder-zip
+            path: .
 
       - name: Create Release
-        id: create_release  # Add ID for later reference
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
+          tag_name: v${{ github.run_number }}  # Use workflow run number as tag
           release_name: Release v${{ github.run_number }}
           body: |
             This release contains the packaged extension.
@@ -62,10 +48,8 @@ jobs:
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}  # Use outputs.upload_url
-          asset_path: IP-Location-Finder.crx
-          asset_name: IP-Location-Finder.crx
-          asset_content_type: application/zip
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: IP-Location-Finder.zip
+            asset_name: IP-Location-Finder-v${{ github.run_number }}.zip
+            asset_content_type: application/zip
