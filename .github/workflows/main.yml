@@ -1,41 +1,45 @@
-name: Build IP-Location-Finder Chrome Extension
+name: Build and Package Extension
 
 on:
   push:
     branches:
-      - main # Or the branch you use for releases
-  workflow_dispatch: # Allow manual trigger
+      - main
 
 jobs:
-  build:
+  package:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 18 # Or your preferred node version
-
-      - name: Install web-ext and chrome-pack
-        run: npm install --global web-ext chrome-pack
-
-      - name: Build ZIP
+          node-version: '14'
+          
+      - name: Install dependencies
         run: |
-          web-ext build \
-            --artifacts-dir=dist \
-            --source-dir=extension \
-            --overwrite-dest \
-            --filename="IP-Location-Finder.zip"
+          cd extension
+          npm install
 
-      - name: Convert ZIP to CRX
+      - name: Build the extension
         run: |
-          chrome-pack dist/IP-Location-Finder.zip dist/IP-Location-Finder.crx --pack-extension=false
+          cd extension
+          npm run build
 
-      - name: Upload CRX
-        uses: actions/upload-artifact@v4
+      - name: Create zip package
+        run: |
+          cd extension
+          zip -r extension.zip ./*
+
+      - name: Upload zip package
+        uses: actions/upload-artifact@v2
         with:
-          name: IP-Location-Finder-crx
-          path: dist/IP-Location-Finder.crx
+          name: extension-package
+          path: extension/extension.zip
+          
+      - name: Move built package to Packages directory
+        run: |
+          mkdir -p Packages
+          mv extension/extension.zip Packages/
