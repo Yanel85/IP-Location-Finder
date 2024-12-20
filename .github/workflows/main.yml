@@ -1,7 +1,7 @@
-name: Release Extension Zip
+name: Package and Release Extension
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   build:
@@ -9,13 +9,49 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Zip extension folder
+      - name: Zip Extension Folder
         run: |
-          zip -r extension.zip extension
+          cd extension
+          zip -r ../IP-Location-Finder.zip *
+          cd ..
+
+      - name: Upload ZIP Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IP-Location-Finder-zip
+          path: IP-Location-Finder.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download ZIP Artifact
+        uses: actions/download-artifact@v4
+        with:
+            name: IP-Location-Finder-zip
+            path: .
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}  # Use workflow run number as tag
+          release_name: Release v${{ github.run_number }}
+          body: |
+            This release contains the packaged extension.
+          draft: false
+          prerelease: false
 
       - name: Upload Release Asset
-        uses: ncipollo/release-action@v1
+        uses: actions/upload-release-asset@v1
+        env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: IP-Location-Finder.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: IP-Location-Finder.zip
+          asset_name: IP-Location-Finder.zip
+          asset_content_type: application/zip
