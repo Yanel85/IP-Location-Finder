@@ -1,4 +1,4 @@
-name: Build and Package Extension
+name: Build and Package Chrome Extension
 
 on:
   push:
@@ -23,23 +23,23 @@ jobs:
           cd extension
           npm install
 
-      - name: Build the extension
+      - name: Build the Chrome extension
         run: |
           cd extension
           npm run build
 
-      - name: Create zip package
+      - name: Create zip package for Chrome extension
         run: |
           cd extension
-          zip -r extension.zip ./*
+          zip -r chrome-extension.zip ./*
 
       - name: Upload zip package
         uses: actions/upload-artifact@v3
         with:
-          name: extension-package
-          path: extension/extension.zip
+          name: chrome-extension-package
+          path: extension/chrome-extension.zip
           
       - name: Move built package to Packages directory
         run: |
           mkdir -p Packages
-          mv extension/extension.zip Packages/
+          mv extension/chrome-extension.zip Packages/
