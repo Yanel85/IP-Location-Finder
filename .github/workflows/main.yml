@@ -34,16 +34,13 @@ jobs:
             name: IP-Location-Finder-zip
             path: .
 
-      - name: Get tag name
-        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: Create Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.TAG_NAME }} 
-          release_name: Release ${{ env.TAG_NAME }}
+          tag_name: v1.3 
+          release_name: Release v1.3
           body: |
             This release contains the packaged extension.
           draft: false
