@@ -34,6 +34,9 @@ jobs:
             name: IP-Location-Finder-zip
             path: .
 
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
       - name: Create Release
         uses: actions/create-release@v1
         env:
