@@ -6,8 +6,12 @@ let currentApiUrl = defaultApiUrl;
 const apiUrls = {
     "ipapi.co": "https://ipapi.co/{ip}/json",
     "ipinfo.io": "https://ipinfo.io/{ip}/json",
-    "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace" // 需要解析响应
+    "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace", // 需要解析响应
+    "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_xxxxxxxxxxxxx&ipAddress={ip}", // 需要替换API Key
+    "bigDataCloud": "https://api.bigdatacloud.net/data/ip-geolocation?ip={ip}",
+    "custom": "custom" // 添加自定义选项
 };
+
 
 // Load API URL from storage
 chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
@@ -22,7 +26,6 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["selection"],
     });
 });
-
 
 // Context menu click handler
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -57,11 +60,15 @@ function sendError(message, tabId) {
     chrome.tabs.sendMessage(tabId, { type: "error", message });
 }
 
+
 // Generic IP lookup function
 async function queryIpLocation(ip, tabId) {
     console.log("background.js: queryIpLocation called, ip:", ip, "tabId", tabId);
     try {
-        const apiUrl = currentApiUrl.replace("{ip}", ip);
+        let apiUrl = currentApiUrl;
+        if (currentApiUrl !== apiUrls["custom"]) {
+            apiUrl = currentApiUrl.replace("{ip}", ip);
+        }
 
         if (currentApiUrl === apiUrls["cloudflare"]) {
             const response = await fetch(apiUrl);
@@ -69,7 +76,6 @@ async function queryIpLocation(ip, tabId) {
                 console.error(`HTTP error! Status: ${response.status}`);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             const text = await response.text();
             const countryLine = text.split('\n').find(line => line.startsWith('loc='));
             if (countryLine) {
@@ -79,6 +85,22 @@ async function queryIpLocation(ip, tabId) {
                 sendError(chrome.i18n.getMessage("errorNoLocation"), tabId);
                 return;
             }
+        } else if (currentApiUrl === apiUrls["geoIpify"]) {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                console.error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            sendCountryInfo(data.location.country, data.location.city, tabId);
+        } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                console.error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            sendCountryInfo(data.countryCode, data.city, tabId);
         } else {
             const response = await fetch(apiUrl);
             if (!response.ok) {
