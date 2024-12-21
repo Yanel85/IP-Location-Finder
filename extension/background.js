@@ -7,7 +7,7 @@ const apiUrls = {
     "ipapi.co": "https://ipapi.co/{ip}/json",
     "ipinfo.io": "https://ipinfo.io/{ip}/json",
     "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace", // 需要解析响应
-    "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_xxxxxxxxxxxxx&ipAddress={ip}", // 需要替换API Key
+    "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_9kY03l6G3CExGRBVfAqHQLIvOSj2m&ipAddress={ip}", // 需要替换API Key
     "bigDataCloud": "https://api.bigdatacloud.net/data/ip-geolocation?ip={ip}",
     "custom": "custom" // 添加自定义选项
 };

@@ -1,42 +1,42 @@
 {
-    "extName": {
-         "message": "IP 位址定位器",
-         "description": "擴充功能名稱"
-     },
-      "extDescription": {
-         "message": "尋找網頁上 IP 位址的地理位置。",
-          "description": "擴充功能描述"
-    },
-     "optionsTitle":{
-        "message": "IP 位址定位器選項",
-         "description":"選項頁面標題"
-     },
-    "optionsHeading": {
-        "message": "IP 位址定位器選項",
-         "description":"選項頁面標題"
-    },
-     "optionsApiLabel": {
-        "message": "選擇 API：",
-       "description": "選擇API標籤"
-    },
-     "optionsSaved": {
-         "message":"設定已儲存",
-        "description":"設定已儲存提示"
-   },
-      "contextMenuTitle":{
-        "message":"尋找 IP 位址歸屬地",
-         "description":"上下文選單標題"
-     },
-      "errorNoLocation": {
-          "message":"無法取得該 IP 位址對應的國家/地區",
-           "description": "API 無法找到 IP 位址位置時的錯誤訊息"
-    },
-      "errorInvalidIp": {
-          "message":"選取的不是有效的 IP 位址",
-         "description":"選取不是有效IP位址時的錯誤訊息"
-    },
-     "errorFetchLocation": {
-       "message":"查詢 IP 位址歸屬地過程中發生錯誤:",
-         "description": "查詢位置發生錯誤時的提示"
-   }
+  "extName": {
+    "message": "IP 位址定位器",
+    "description": "擴充功能名稱"
+  },
+  "extDescription": {
+    "message": "尋找網頁上 IP 位址的地理位置。",
+    "description": "擴充功能描述"
+  },
+  "optionsTitle": {
+    "message": "IP 位址定位器選項",
+    "description": "選項頁面標題"
+  },
+  "optionsHeading": {
+    "message": "IP 位址定位器選項",
+    "description": "選項頁面標題"
+  },
+  "optionsApiLabel": {
+    "message": "選擇 API：",
+    "description": "選擇API標籤"
+  },
+  "optionsSaved": {
+    "message": "設定已儲存",
+    "description": "設定已儲存提示"
+  },
+  "contextMenuTitle": {
+    "message": "尋找 IP 位址歸屬地",
+    "description": "上下文選單標題"
+  },
+  "errorNoLocation": {
+    "message": "無法取得該 IP 位址對應的國家/地區",
+    "description": "API 無法找到 IP 位址位置時的錯誤訊息"
+  },
+  "errorInvalidIp": {
+    "message": "選取的不是有效的 IP 位址",
+    "description": "選取不是有效IP位址時的錯誤訊息"
+  },
+  "errorFetchLocation": {
+    "message": "API 錯誤:",
+    "description": "查詢位置發生錯誤時的提示"
+  }
 }

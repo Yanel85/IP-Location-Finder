@@ -1,42 +1,42 @@
 {
-"extName": {
-"message": "IP-Adressenfinder",
-"description":"Name der Erweiterung"
-},
-"extDescription": {
-"message":"Findet den geografischen Standort von IP-Adressen auf einer Seite.",
-"description": "Beschreibung der Erweiterung"
-},
-"optionsTitle":{
-"message":"Optionen des IP-Adressenfinders",
-"description":"Optionen Seitentitel"
-},
-"optionsHeading": {
-"message":"Optionen des IP-Adressenfinders",
-"description":"Optionen Seitentitel"
-},
-"optionsApiLabel": {
-"message": "API auswählen:",
-"description": "Bezeichnung für API auswählen"
-},
-"optionsSaved": {
-"message":"Einstellungen gespeichert",
-"description":"Meldung Gespeichert"
-},
-"contextMenuTitle":{
-"message":"IP-Adressstandort suchen",
-"description":"Titel des Kontextmenüs"
-},
-"errorNoLocation": {
-"message": "Standort für diese IP-Adresse konnte nicht abgerufen werden",
-"description":"Fehlermeldung, wenn API Standort für IP-Adresse nicht finden kann"
-},
-"errorInvalidIp": {
-"message":"Ausgewählter Text ist keine gültige IP-Adresse",
-"description":"Fehlermeldung, wenn ausgewählter Text keine gültige IP-Adresse ist"
-},
-"errorFetchLocation": {
-"message":"Fehler beim Abrufen des IP-Adressstandorts:",
-"description": "Fehlermeldung beim Abrufen"
-}
+    "extName": {
+        "message": "IP-Adressenfinder",
+        "description": "Name der Erweiterung"
+    },
+    "extDescription": {
+        "message": "Findet den geografischen Standort von IP-Adressen auf einer Seite.",
+        "description": "Beschreibung der Erweiterung"
+    },
+    "optionsTitle": {
+        "message": "Optionen des IP-Adressenfinders",
+        "description": "Optionen Seitentitel"
+    },
+    "optionsHeading": {
+        "message": "Optionen des IP-Adressenfinders",
+        "description": "Optionen Seitentitel"
+    },
+    "optionsApiLabel": {
+        "message": "API auswählen:",
+        "description": "Bezeichnung für API auswählen"
+    },
+    "optionsSaved": {
+        "message": "Einstellungen gespeichert",
+        "description": "Meldung Gespeichert"
+    },
+    "contextMenuTitle": {
+        "message": "IP-Adressstandort suchen",
+        "description": "Titel des Kontextmenüs"
+    },
+    "errorNoLocation": {
+        "message": "Standort für diese IP-Adresse konnte nicht abgerufen werden",
+        "description": "Fehlermeldung, wenn API Standort für IP-Adresse nicht finden kann"
+    },
+    "errorInvalidIp": {
+        "message": "Ausgewählter Text ist keine gültige IP-Adresse",
+        "description": "Fehlermeldung, wenn ausgewählter Text keine gültige IP-Adresse ist"
+    },
+    "errorFetchLocation": {
+        "message": "Fehler beim Abrufen des IP-Adressstandorts:",
+        "description": "Fehlermeldung beim Abrufen"
+    }
 }

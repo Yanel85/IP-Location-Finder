@@ -1,42 +1,42 @@
 {
-"extName": {
-"message": "Localisateur d'adresse IP",
-"description": "Nom de l'extension"
-},
-"extDescription": {
-"message":"Trouve la localisation géographique des adresses IP sur une page.",
-"description": "Description de l'extension"
-},
-"optionsTitle":{
-"message": "Options du localisateur d'adresse IP",
-"description": "Titre de la page d'options"
-},
-"optionsHeading": {
-"message":"Options du localisateur d'adresse IP",
-"description":"Titre de la page d'options"
-},
-"optionsApiLabel": {
-"message":"Sélectionner l'API :",
-"description": "Label pour la sélection de l'API"
-},
-"optionsSaved": {
-"message":"Paramètres enregistrés",
-"description":"Message Enregistré"
-},
-"contextMenuTitle":{
-"message":"Trouver l'emplacement de l'adresse IP",
-"description": "Titre du menu contextuel"
-},
-"errorNoLocation": {
-"message": "Impossible d'obtenir l'emplacement pour cette adresse IP",
-"description": "Message d'erreur lorsque l'API ne peut pas trouver l'emplacement de l'adresse IP"
-},
-"errorInvalidIp": {
-"message":"Le texte sélectionné n'est pas une adresse IP valide",
-"description": "Message d'erreur lorsque le texte sélectionné n'est pas une adresse IP valide"
-},
-"errorFetchLocation": {
-"message":"Erreur lors de la récupération de l'emplacement de l'adresse IP :",
-"description":"Message d'erreur lors de la récupération"
-}
+    "extName": {
+        "message": "Localisateur d'adresse IP",
+        "description": "Nom de l'extension"
+    },
+    "extDescription": {
+        "message": "Trouve la localisation géographique des adresses IP sur une page.",
+        "description": "Description de l'extension"
+    },
+    "optionsTitle": {
+        "message": "Options du localisateur d'adresse IP",
+        "description": "Titre de la page d'options"
+    },
+    "optionsHeading": {
+        "message": "Options du localisateur d'adresse IP",
+        "description": "Titre de la page d'options"
+    },
+    "optionsApiLabel": {
+        "message": "Sélectionner l'API :",
+        "description": "Label pour la sélection de l'API"
+    },
+    "optionsSaved": {
+        "message": "Paramètres enregistrés",
+        "description": "Message Enregistré"
+    },
+    "contextMenuTitle": {
+        "message": "Trouver l'emplacement de l'adresse IP",
+        "description": "Titre du menu contextuel"
+    },
+    "errorNoLocation": {
+        "message": "Impossible d'obtenir l'emplacement pour cette adresse IP",
+        "description": "Message d'erreur lorsque l'API ne peut pas trouver l'emplacement de l'adresse IP"
+    },
+    "errorInvalidIp": {
+        "message": "Le texte sélectionné n'est pas une adresse IP valide",
+        "description": "Message d'erreur lorsque le texte sélectionné n'est pas une adresse IP valide"
+    },
+    "errorFetchLocation": {
+        "message": "Erreur lors de la récupération de l'emplacement de l'adresse IP :",
+        "description": "Message d'erreur lors de la récupération"
+    }
 }

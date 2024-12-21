@@ -7,20 +7,40 @@
         "message": "Finds the geographical location of IP addresses on a page.",
         "description": "Extension description"
     },
-    "optionsTitle":{
+     "optionsTitle":{
         "message": "IP Location Finder Options",
          "description":"Options page title"
     },
     "optionsHeading": {
       "message": "IP Location Finder Options",
-       "description": "Options page heading"
+        "description": "Options page heading"
+   },
+   "optionsApiLabel": {
+       "message": "Select API:",
+      "description": "Label for API select"
+     },
+     "optionsSaved": {
+       "message": "Settings saved",
+        "description": "Options Saved Message"
+     },
+    "contextMenuTitle":{
+         "message":"Find IP Location",
+         "description":"Context Menu Title"
     },
-     "optionsApiLabel": {
-      "message": "Select API:",
-        "description": "Label for API select"
+    "errorNoLocation": {
+        "message":"Unable to get location for this IP address",
+         "description":"Error message when API cannot find location for IP address"
     },
-      "optionsSaved": {
-        "message": "Settings saved",
-         "description": "Options Saved Message"
-    }
+     "errorInvalidIp": {
+        "message":"Selected text is not valid IP address",
+          "description":"Error message when selected text is not a valid IP address"
+    },
+   "errorFetchLocation": {
+       "message":"API Error:",
+        "description": "Error message during fetch"
+    },
+     "optionsCustomApiLabel": {
+            "message": "Custom API URL:",
+             "description": "Label for custom API url input"
+      }
 }
