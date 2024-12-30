@@ -26,9 +26,7 @@
 4.  Click "Load unpacked" and select the extension directory.
 5.  The extension will now be installed.
 
-* Online:
-
-  Chrome Web Store 
+* Online: [Chrome Web Store ](https://chromewebstore.google.com/detail/ip-%E5%9C%B0%E5%9D%80%E5%AE%9A%E4%BD%8D%E5%99%A8/eohliaamdakpjlipdfdkpgjnpbdbipel)
 
 ## Usage
 
