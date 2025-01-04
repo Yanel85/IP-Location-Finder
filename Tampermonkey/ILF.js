@@ -14,6 +14,7 @@
 // @connect      geo.ipify.org
 // @connect      api.bigdatacloud.net
 // @icon         https://flagcdn.com/24x18/cn.png
+// @license      GPL3
 // ==/UserScript==
 
 (function () {
