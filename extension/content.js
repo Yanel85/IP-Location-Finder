@@ -50,7 +50,6 @@ function removeIcon(ipText) {
     }
 }
 
-
 // Send IP location query
 async function queryIpLocation(ip) {
     console.log("content.js: queryIpLocation called, ip:", ip);
@@ -131,7 +130,6 @@ function insertLocation(countryCode, city) {
     locationSpan.style.fontWeight = 'bold';
     locationSpan.style.fontSize = '0.6em';
 
-
     let locationText = "";
     if (countryCode) {
         const flagIconUrl = `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
@@ -145,14 +143,17 @@ function insertLocation(countryCode, city) {
     }
     locationSpan.innerHTML = locationText;
 
-
+    const fragment = document.createDocumentFragment();
     const beforeIpTextNode = document.createTextNode(selectedText.substring(0, ipIndex + currentSelectedText.length));
     const afterIpTextNode = document.createTextNode(selectedText.substring(ipIndex + currentSelectedText.length));
 
+    fragment.appendChild(beforeIpTextNode);
+    fragment.appendChild(locationSpan);
+    fragment.appendChild(afterIpTextNode);
+
     selectedTextNode.textContent = '';
-    selectedTextNode.parentNode.insertBefore(beforeIpTextNode, selectedTextNode);
-    selectedTextNode.parentNode.insertBefore(locationSpan, selectedTextNode);
-    selectedTextNode.parentNode.insertBefore(afterIpTextNode, selectedTextNode);
+    selectedTextNode.parentNode.insertBefore(fragment, selectedTextNode);
+    selectedTextNode.remove();
     window.getSelection().empty();
 }
 

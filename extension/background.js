@@ -12,6 +12,8 @@ const apiUrls = {
     "custom": "custom" // 添加自定义选项
 };
 
+// 缓存对象
+const cache = {};
 
 // Load API URL from storage
 chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
@@ -60,10 +62,18 @@ function sendError(message, tabId) {
     chrome.tabs.sendMessage(tabId, { type: "error", message });
 }
 
-
 // Generic IP lookup function
 async function queryIpLocation(ip, tabId) {
     console.log("background.js: queryIpLocation called, ip:", ip, "tabId", tabId);
+
+    // 检查缓存
+    if (cache[ip]) {
+        console.log("background.js: IP found in cache:", ip);
+        const { countryCode, city } = cache[ip];
+        sendCountryInfo(countryCode, city, tabId);
+        return;
+    }
+
     try {
         let apiUrl = currentApiUrl;
         if (currentApiUrl !== apiUrls["custom"]) {
@@ -80,6 +90,7 @@ async function queryIpLocation(ip, tabId) {
             const countryLine = text.split('\n').find(line => line.startsWith('loc='));
             if (countryLine) {
                 const countryCode = countryLine.split('=')[1];
+                cache[ip] = { countryCode, city: null }; // 缓存结果
                 sendCountryInfo(countryCode, null, tabId);
             } else {
                 sendError(chrome.i18n.getMessage("errorNoLocation"), tabId);
@@ -92,6 +103,7 @@ async function queryIpLocation(ip, tabId) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+            cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
             sendCountryInfo(data.location.country, data.location.city, tabId);
         } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
             const response = await fetch(apiUrl);
@@ -100,6 +112,7 @@ async function queryIpLocation(ip, tabId) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+            cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
             sendCountryInfo(data.countryCode, data.city, tabId);
         } else {
             const response = await fetch(apiUrl);
@@ -110,11 +123,12 @@ async function queryIpLocation(ip, tabId) {
             const data = await response.json();
             let city = data.city;
             if (currentApiUrl === apiUrls["ipinfo.io"]) {
-                city = data.region
+                city = data.region;
                 if (!city || !city.trim()) {
-                    city = data.city
+                    city = data.city;
                 }
             }
+            cache[ip] = { countryCode: data.country, city }; // 缓存结果
             sendCountryInfo(data.country, city, tabId);
         }
     } catch (error) {
