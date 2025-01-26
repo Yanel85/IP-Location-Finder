@@ -40,16 +40,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v1.4
-          release_name: Release ${github.tag_name}
+          release_name: Release v1.4
           body: |
             This release contains the packaged extension.
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-            upload_url: ${ steps.create_release.outputs.upload_url }
-            asset_path: IP-Location-Finder.zip
-            asset_name: IP-Location-Finder-v${ github.tag_name }.zip
-            asset_content_type: application/zip
