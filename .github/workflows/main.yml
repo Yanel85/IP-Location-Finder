@@ -5,36 +5,18 @@ on:
 
 jobs:
   build:
+    name: Upload Release Asset
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Zip Extension Folder
+        uses: actions/checkout@v2
+      - name: Zip Extension Folder 
         run: |
-          cd extension
-          zip -r ./IP-Location-Finder.zip *
-          cd ..
-
-      - name: Upload ZIP Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: IP-Location-Finder-zip
-          path: IP-Location-Finder.zip
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download ZIP Artifact
-        uses: actions/download-artifact@v4
-        with:
-            name: IP-Location-Finder-zip
-            path: .
-
+            cd extension
+            zip -r ../IP-Location-Finder.zip .
+            cd ..
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,11 +27,13 @@ jobs:
             This release contains the packaged extension.
           draft: false
           prerelease: false
-
       - name: Upload Release Asset
+        id: upload-release-asset 
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: IP-Location-Finder.zip
-            asset_name: IP-Location-Finder-v${{ github.run_number }}.zip
-            asset_content_type: application/zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./IP-Location-Finder.zip
+          asset_name: IP-Location-Finder.zip
+          asset_content_type: application/zip
