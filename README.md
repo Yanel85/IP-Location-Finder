@@ -2,7 +2,7 @@
 
 # IP Location Finder
 
-| ![01](./img/00.png) | A Chrome extension that identifies the geographic location of IP addresses on a webpage. |
+| ![00](./img/00.png) | A Chrome extension that identifies the geographic location of IP addresses on a webpage. |
 |----------------------------------|-----------------------------|
 
 
