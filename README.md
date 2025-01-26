@@ -2,7 +2,7 @@
 
 # IP Location Finder
 
-| ![01](./img/01.jpg) | A Chrome extension that identifies the geographic location of IP addresses on a webpage. |
+| ![01](./img/00.png) | A Chrome extension that identifies the geographic location of IP addresses on a webpage. |
 |----------------------------------|-----------------------------|
 
 
@@ -13,7 +13,6 @@
 *   **Geographic Location:** Displays the country and city (when available) associated with the selected IP address.
 *   **Flag Icon & Country Code:** Displays a flag icon and country code alongside the location information.
 *   **Flexible API:** Uses an external API for IP geolocation lookup, with customizable API options in the extension's settings.
-
 *   **Clean Display:** Displays the location in the format: `(FlagIcon CountryCode, City)`. If city is unavailable, only shows `(FlagIcon CountryCode)`.
 
 ## Installation
