@@ -31,10 +31,11 @@ jobs:
       - name: Download ZIP Artifact
         uses: actions/download-artifact@v4
         with:
-            name: IP-Location-Finder-zip
-            path: ./IP-Location-Finder.zip
+          name: IP-Location-Finder-zip
+          path: ./IP-Location-Finder.zip
 
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,3 +46,13 @@ jobs:
             This release contains the packaged extension.
           draft: false
           prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./IP-Location-Finder.zip
+          asset_name: IP-Location-Finder.zip
+          asset_content_type: application/zip
