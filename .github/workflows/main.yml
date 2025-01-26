@@ -39,8 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.3 
-          release_name: Release v1.3
+          tag_name: v1.4 
+          release_name: Release v1.4
           body: |
             This release contains the packaged extension.
           draft: false
