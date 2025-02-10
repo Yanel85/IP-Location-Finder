@@ -41,12 +41,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
 });
 
-// IP address validation
-function isValidIP(ip) {
-    const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-    const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-    return ipv4Regex.test(ip) || ipv6Regex.test(ip);
-}
+
 
 // Send location information
 function sendCountryInfo(countryCode, city, tabId) {
@@ -138,7 +133,7 @@ async function queryIpLocation(ip, tabId) {
 }
 
 async function handleIpQuery(ip, tabId) {
-    if (isValidIP(ip)) {
+    if (ip) {
         await queryIpLocation(ip, tabId);
     } else {
         sendError(chrome.i18n.getMessage("errorInvalidIp"), tabId);
