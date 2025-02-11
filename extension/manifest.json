@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "permissions": [
@@ -30,6 +30,10 @@
      "web_accessible_resources": [
       {
         "resources": ["icon.svg"],
+        "matches": ["<all_urls>"]
+      },
+      {
+        "resources": ["/flag254/*.png"],
         "matches": ["<all_urls>"]
       }
     ]

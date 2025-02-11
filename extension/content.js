@@ -86,7 +86,7 @@ function showTooltip(text, isError = false) {
     tooltip.style.position = "absolute";
     tooltip.style.background = isError ? "red" : "lightgreen";
     tooltip.style.color = "black";
-    tooltip.style.padding = "5px";
+    tooltip.style.padding = "3px";
     tooltip.style.border = "1px solid #ccc";
     tooltip.style.borderRadius = "4px";
     tooltip.style.zIndex = "9999"; // Ensure tooltip is above all elements
@@ -132,7 +132,7 @@ function insertLocation(countryCode, city) {
 
     let locationText = "";
     if (countryCode) {
-        const flagIconUrl = `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+        const flagIconUrl = chrome.runtime.getURL(`./flag254/${countryCode.toLowerCase()}.png`);
         const flagImage = `<img src="${flagIconUrl}" style="display:inline-block;vertical-align:middle;margin-right:2px; width:18px; height:13px;">`;
         locationText = `(${flagImage}${countryCode}`;
         if (city && city.trim()) {
