@@ -70,6 +70,8 @@ chrome.runtime.onMessage.addListener((message) => {
         insertLocation(message.country, message.city);
     } else if (message.type === "error") {
         showTooltip(message.message, true);
+    } else if (message.type === "info") {
+        showTooltip(message.message, false);
     }
 });
 
@@ -88,6 +90,7 @@ function showTooltip(text, isError = false) {
     tooltip.style.color = "black";
     tooltip.style.padding = "3px";
     tooltip.style.border = "1px solid #ccc";
+    tooltip.style.fontSize = "0.6em";
     tooltip.style.borderRadius = "4px";
     tooltip.style.zIndex = "9999"; // Ensure tooltip is above all elements
     tooltip.textContent = text;

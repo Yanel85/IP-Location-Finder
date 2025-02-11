@@ -56,6 +56,10 @@ function sendCountryInfo(countryCode, city, tabId) {
 function sendError(message, tabId) {
     chrome.tabs.sendMessage(tabId, { type: "error", message });
 }
+//Send info message
+function sendInfo(message, tabId) {
+    chrome.tabs.sendMessage(tabId, { type: "info", message });
+}
 
 // Generic IP lookup function
 async function queryIpLocation(ip, tabId) {
@@ -133,7 +137,7 @@ async function queryIpLocation(ip, tabId) {
 }
 
 async function handleIpQuery(ip, tabId) {
-    if (ip) {
+    if (isValidIP(ip)) {
         await queryIpLocation(ip, tabId);
     } else {
         sendError(chrome.i18n.getMessage("errorInvalidIp"), tabId);
@@ -152,3 +156,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
     }
 });
+
+
+// IP address validation
+function isValidIP(ip) {
+    const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+    return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+}
