@@ -20,19 +20,7 @@ chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
     currentApiUrl = items.apiUrl;
 });
 
-// Create context menu on install
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "ipLocationFinder",
-        title: chrome.i18n.getMessage("contextMenuTitle"),
-        contexts: ["selection"],
-    });
-});
 
-// Context menu click handler
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    handleIpQuery(info.selectionText.trim(), tab.id);
-});
 
 // API URL update handler
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -136,13 +124,7 @@ async function queryIpLocation(ip, tabId) {
     }
 }
 
-async function handleIpQuery(ip, tabId) {
-    if (isValidIP(ip)) {
-        await queryIpLocation(ip, tabId);
-    } else {
-        sendError(chrome.i18n.getMessage("errorInvalidIp"), tabId);
-    }
-}
+
 
 // Message listener for content.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -157,10 +139,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-
-// IP address validation
-function isValidIP(ip) {
-    const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-    const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
-    return ipv4Regex.test(ip) || ipv6Regex.test(ip);
-}

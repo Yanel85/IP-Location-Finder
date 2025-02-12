@@ -16,7 +16,7 @@ function handleMouseUp() {
     const selectedText = window.getSelection().toString().trim();
 
     if (selectedText && isValidIP(selectedText)) {
-        currentSelectedText = selectedText;
+        currentSelectedText = selectedText.split('/')[0];
         showIcon();
         queryIpLocation(currentSelectedText);
     }
@@ -173,5 +173,10 @@ function removeLocationSpan(ipText) {
 function isValidIP(ip) {
     const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
     const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+    const ipv4CidrRegex = /^(\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2])$/;
+
+    if (ipv4CidrRegex.test(ip)) {
+        ip = ip.split('/')[0]; // 去除CIDR部分
+    }
     return ipv4Regex.test(ip) || ipv6Regex.test(ip);
 }
