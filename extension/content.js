@@ -24,12 +24,12 @@ function handleMouseUp() {
 
 // Display IP lookup icon
 function showIcon() {
-    removeIcon(currentSelectedText);
+    //removeIcon(currentSelectedText);
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
 
     const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
+    //const rect = range.getBoundingClientRect();
     const endRect = range.getClientRects()[range.getClientRects().length - 1];
 
     ipIcon = document.createElement("img");
@@ -71,18 +71,17 @@ chrome.runtime.onMessage.addListener((message) => {
     } else if (message.type === "error") {
         showTooltip(message.message, true);
     } else if (message.type === "info") {
-        showTooltip(message.message, false);
+        showTooltip(message.msg, false);
     }
 });
 
 // Display tooltip message
 function showTooltip(text, isError = false) {
     removeTooltip();
-    const selection = window.getSelection();
-    if (!selection.rangeCount) return;
 
-    const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
+    if (!ipIcon) return;
+
+    const rect = ipIcon.getBoundingClientRect();
 
     tooltip = document.createElement("div");
     tooltip.style.position = "absolute";
@@ -94,14 +93,14 @@ function showTooltip(text, isError = false) {
     tooltip.style.borderRadius = "4px";
     tooltip.style.zIndex = "9999"; // Ensure tooltip is above all elements
     tooltip.textContent = text;
-    tooltip.style.top = rect.bottom + window.scrollY + "px";
-    tooltip.style.left = rect.left + window.scrollX + "px";
+    tooltip.style.top = rect.bottom + window.scrollY - 18 + "px";
+    tooltip.style.left = rect.left + window.scrollX + 20 + "px";
 
     document.body.appendChild(tooltip);
 
     setTimeout(() => {
         removeTooltip();
-    }, 3000);
+    }, 6000);
 }
 // Remove tooltip
 function removeTooltip() {

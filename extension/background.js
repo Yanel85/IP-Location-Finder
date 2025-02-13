@@ -47,8 +47,12 @@ function sendError(message, tabId) {
     chrome.tabs.sendMessage(tabId, { type: "error", message });
 }
 //Send info message
-function sendInfo(message, tabId) {
-    chrome.tabs.sendMessage(tabId, { type: "info", message });
+function sendInfo(msg, tabId) {
+    console.log("background.js: sendInfo called, msg:", msg, "tabId", tabId);
+    chrome.tabs.sendMessage(tabId, {
+        type: "info",
+        msg: msg
+    });
 }
 
 // Generic IP lookup function
@@ -75,6 +79,7 @@ async function queryIpLocation(ip, tabId) {
             const data = await response.json();
             cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
             sendCountryInfo(data.location.country, data.location.city, tabId);
+            sendInfo(data.isp, tabId);
         } else if (currentApiUrl === apiUrls["ip-api.com"]) {
             const lang = ['en', 'de', 'es', 'fr', 'ja', 'pt-BR', 'ru', 'zh-CN'];
             let brwlang = chrome.i18n.getUILanguage();
@@ -90,7 +95,7 @@ async function queryIpLocation(ip, tabId) {
             const data = await response.json();
             cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
             sendCountryInfo(data.countryCode, data.city, tabId);
-            //sendInfo(data.isp, tabId);
+            sendInfo(data.isp, tabId);
         } else {
             const response = await fetch(apiUrl);
             if (!response.ok) {
@@ -108,6 +113,7 @@ async function queryIpLocation(ip, tabId) {
             }
             cache[ip] = { countryCode: countryCode, city }; // 缓存结果
             sendCountryInfo(countryCode, city, tabId);
+            sendInfo(data.org, tabId);
         }
     } catch (error) {
         console.error("Error fetching location:", error);
