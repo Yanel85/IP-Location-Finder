@@ -27,6 +27,8 @@
 
 * [Chrome Web Store ](https://chromewebstore.google.com/detail/ip-%E5%9C%B0%E5%9D%80%E5%AE%9A%E4%BD%8D%E5%99%A8/eohliaamdakpjlipdfdkpgjnpbdbipel)
 
+* [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/ofoepnlfldpckgnekinaplppcknbdcdm)
+
 * [Tampermonkey](https://greasyfork.org/zh-CN/scripts/522749-ip-location-finder)
 
 ## Usage
