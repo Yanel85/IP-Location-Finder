@@ -135,8 +135,9 @@ function insertLocation(countryCode, city) {
 
     let locationText = "";
     if (countryCode) {
-        const flagIconUrl = chrome.runtime.getURL(`./flag254/${countryCode.toLowerCase()}.png`);
-        const flagImage = `<img src="${flagIconUrl}" style="display:inline-block;vertical-align:middle;margin-right:2px; width:18px; height:13px;">`;
+        let flagIcon = `./flag254/${countryCode.toLowerCase()}.png`;
+        let flagIconUrl = chrome.runtime.getURL(flagIcon);
+        const flagImage = `<img src="${flagIconUrl}" style="display:inline-block;vertical-align:middle;margin-right:2px; width:16px; height:11px;">`;
         locationText = `(${flagImage}${countryCode}`;
         if (city && city.trim()) {
             locationText = `${locationText},${city})`;

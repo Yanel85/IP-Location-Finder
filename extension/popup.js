@@ -15,10 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.storage.sync.get({ apiUrl: "https://ipapi.co/{ip}/json" }, (items) => {
         apiUrlSelect.value = items.apiUrl;
-        if (items.apiUrl === "custom") {
-            customApiInput.style.display = "block";
-        } else {
-            customApiInput.style.display = "none";
+        //if items.apiUrl is not in the select list, set it to custom
+        if (!Array.from(apiUrlSelect.options).map(option => option.value).includes
+            (items.apiUrl)) {
+            apiUrlSelect.value = "custom";
+            statusDiv.textContent = items.apiUrl;
         }
     });
 
@@ -26,12 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const apiUrl = apiUrlSelect.value;
         if (apiUrl === 'custom') {
             customApiInput.style.display = 'block';
-            chrome.storage.sync.set({ apiUrl: customApiInput.value }, () => {
-                statusDiv.textContent = chrome.i18n.getMessage("optionsSaved");
-                setTimeout(() => {
-                    statusDiv.textContent = "";
-                }, 1000);
-            });
             customApiInput.addEventListener('input', () => {
                 chrome.storage.sync.set({ apiUrl: customApiInput.value }, () => {
                     statusDiv.textContent = chrome.i18n.getMessage("optionsSaved");

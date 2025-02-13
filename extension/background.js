@@ -6,9 +6,8 @@ let currentApiUrl = defaultApiUrl;
 const apiUrls = {
     "ipapi.co": "https://ipapi.co/{ip}/json",
     "ipinfo.io": "https://ipinfo.io/{ip}/json",
-    "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace", // 需要解析响应
     "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_9kY03l6G3CExGRBVfAqHQLIvOSj2m&ipAddress={ip}", // 需要替换API Key
-    "bigDataCloud": "https://api.bigdatacloud.net/data/ip-geolocation?ip={ip}",
+    "ip-api.com": "http://ip-api.com/json/{ip}",
     "custom": "custom" // 添加自定义选项
 };
 
@@ -26,6 +25,9 @@ chrome.storage.sync.get({ apiUrl: currentApiUrl }, (items) => {
 chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === "sync" && changes.apiUrl) {
         currentApiUrl = changes.apiUrl.newValue;
+        // 清空缓存
+        Object.keys(cache).forEach(key => delete cache[key]);
+
     }
 });
 
@@ -62,28 +64,9 @@ async function queryIpLocation(ip, tabId) {
     }
 
     try {
-        let apiUrl = currentApiUrl;
-        if (currentApiUrl !== apiUrls["custom"]) {
-            apiUrl = currentApiUrl.replace("{ip}", ip);
-        }
+        let apiUrl = currentApiUrl.replace("{ip}", ip);
 
-        if (currentApiUrl === apiUrls["cloudflare"]) {
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                console.error(`HTTP error! Status: ${response.status}`);
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const text = await response.text();
-            const countryLine = text.split('\n').find(line => line.startsWith('loc='));
-            if (countryLine) {
-                const countryCode = countryLine.split('=')[1];
-                cache[ip] = { countryCode, city: null }; // 缓存结果
-                sendCountryInfo(countryCode, null, tabId);
-            } else {
-                sendError(chrome.i18n.getMessage("errorNoLocation"), tabId);
-                return;
-            }
-        } else if (currentApiUrl === apiUrls["geoIpify"]) {
+        if (currentApiUrl === apiUrls["geoIpify"]) {
             const response = await fetch(apiUrl);
             if (!response.ok) {
                 console.error(`HTTP error! Status: ${response.status}`);
@@ -92,8 +75,14 @@ async function queryIpLocation(ip, tabId) {
             const data = await response.json();
             cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
             sendCountryInfo(data.location.country, data.location.city, tabId);
-        } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
-            const response = await fetch(apiUrl);
+        } else if (currentApiUrl === apiUrls["ip-api.com"]) {
+            const lang = ['en', 'de', 'es', 'fr', 'ja', 'pt-BR', 'ru', 'zh-CN'];
+            let brwlang = chrome.i18n.getUILanguage();
+            if (!lang.includes(brwlang)) {
+                brwlang = 'en';
+            }
+            const apiUrladdlang = apiUrl + "?lang=" + brwlang;
+            const response = await fetch(apiUrladdlang);
             if (!response.ok) {
                 console.error(`HTTP error! Status: ${response.status}`);
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -101,6 +90,7 @@ async function queryIpLocation(ip, tabId) {
             const data = await response.json();
             cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
             sendCountryInfo(data.countryCode, data.city, tabId);
+            //sendInfo(data.isp, tabId);
         } else {
             const response = await fetch(apiUrl);
             if (!response.ok) {
@@ -108,6 +98,7 @@ async function queryIpLocation(ip, tabId) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+            let countryCode = [data.countryCode, data.country, data.country_code].find(code => code && code.length === 2);
             let city = data.city;
             if (currentApiUrl === apiUrls["ipinfo.io"]) {
                 city = data.region;
@@ -115,8 +106,8 @@ async function queryIpLocation(ip, tabId) {
                     city = data.city;
                 }
             }
-            cache[ip] = { countryCode: data.country, city }; // 缓存结果
-            sendCountryInfo(data.country, city, tabId);
+            cache[ip] = { countryCode: countryCode, city }; // 缓存结果
+            sendCountryInfo(countryCode, city, tabId);
         }
     } catch (error) {
         console.error("Error fetching location:", error);
