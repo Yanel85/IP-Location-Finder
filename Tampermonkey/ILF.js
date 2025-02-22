@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IP Location Finder
 // @namespace    https://github.com/Yanel85/IP-Location-Finder/
-// @version      1.2
+// @version      1.4
 // @description  Finds the geographical location of IP addresses on a page.
 // @author       Perry Yen
 // @match        *://*/*
@@ -12,7 +12,7 @@
 // @connect      ipinfo.io
 // @connect      www.cloudflare.com
 // @connect      geo.ipify.org
-// @connect      api.bigdatacloud.net
+// @connect      ip-api.com
 // @icon         https://flagcdn.com/24x18/cn.png
 // @license      GPL3
 // ==/UserScript==
@@ -30,12 +30,14 @@
     const apiUrls = {
         "ipapi.co": "https://ipapi.co/{ip}/json",
         "ipinfo.io": "https://ipinfo.io/{ip}/json",
-        "cloudflare": "https://www.cloudflare.com/cdn-cgi/trace",
-        "bigDataCloud": "https://api.bigdatacloud.net/data/ip-geolocation?ip={ip}",
+        "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_9kY03l6G3CExGRBVfAqHQLIvOSj2m&ipAddress={ip}", // 需要替换API Key
+        "ip-api.com": "http://ip-api.com/json/{ip}",
         "custom": "custom" // 添加自定义选项
     };
 
     let currentApiUrl = GM_getValue("apiUrl", "https://ipinfo.io/{ip}/json");
+
+    const cache = {};
 
     // Event listener for mouseup
     document.addEventListener('mouseup', handleMouseUp);
@@ -53,11 +55,16 @@
         }
     }
 
-    // Display IP lookup icon
-
 
     // Send IP location query
     async function queryIpLocation(ip) {
+        // 检查缓存
+        if (cache[ip]) {
+            const { countryCode, city } = cache[ip];
+            insertLocation(countryCode, city);
+            return;
+        }
+
         try {
             let apiUrl = currentApiUrl;
             if (currentApiUrl !== apiUrls["custom"]) {
@@ -74,6 +81,7 @@
                 const countryLine = data.split('\n').find(line => line.startsWith('loc='));
                 if (countryLine) {
                     const countryCode = countryLine.split('=')[1];
+                    cache[ip] = { countryCode, city: null }; // 缓存结果
                     insertLocation(countryCode, null);
                 } else {
                     showTooltip("error", true);
@@ -88,21 +96,23 @@
                     }
                 }
                 if (currentApiUrl === apiUrls["geoIpify"]) {
+                    cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
                     insertLocation(data.location.country, data.location.city);
+                } else if (currentApiUrl === apiUrls["ip-api.com"]) {
+                    cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
+                    insertLocation(data.countryCode, data.city);
                 } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
+                    cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
                     insertLocation(data.countryCode, data.city);
                 } else {
+                    cache[ip] = { countryCode: data.country, city }; // 缓存结果
                     insertLocation(data.country, city);
                 }
             }
-
-
         } catch (error) {
-            //console.error("content.js: Error sending message:", error);
             showTooltip(`error: ${error.message}`, true);
         }
     }
-
 
     // Display tooltip message
     function showTooltip(text, isError = false) {
@@ -118,9 +128,10 @@
         tooltip.style.position = "absolute";
         tooltip.style.background = isError ? "red" : "lightgreen";
         tooltip.style.color = "black";
-        tooltip.style.padding = "5px";
+        tooltip.style.padding = "3px";
         tooltip.style.border = "1px solid #ccc";
         tooltip.style.borderRadius = "4px";
+        tooltip.style.fontSize = "0.6em";
         tooltip.style.zIndex = "9999"; // Ensure tooltip is above all elements
         tooltip.textContent = text;
         tooltip.style.top = rect.bottom + window.scrollY + "px";
@@ -200,7 +211,12 @@
     // IP address validation
     function isValidIP(ip) {
         const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+        const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+        const ipv4CidrRegex = /^(\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2])$/;
+
+        if (ipv4CidrRegex.test(ip)) {
+            ip = ip.split('/')[0]; // 去除CIDR部分
+        }
         return ipv4Regex.test(ip) || ipv6Regex.test(ip);
     }
 
