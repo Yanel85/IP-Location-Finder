@@ -45,9 +45,7 @@ You can customize the extension in the popup window:
 *   **Select API:** Choose from a list of predefined API URLs for the IP location lookup. Custom supports.
     *   `ipapi.co`
     *   `ipinfo.io`
-    *   `cloudflare`
     *   `GeoIpify`
-    *   `BigDataCloud`
     *   `custom`
 
 ## Third-Party Libraries
