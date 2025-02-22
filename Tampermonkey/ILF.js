@@ -9,11 +9,9 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @connect      ipapi.co
-// @connect      ipinfo.io
-// @connect      www.cloudflare.com
 // @connect      geo.ipify.org
 // @connect      ip-api.com
-// @icon         https://flagcdn.com/24x18/cn.png
+// @icon         https://raw.githubusercontent.com/Yanel85/IP-Location-Finder/refs/heads/main/extension/icon.svg
 // @license      GPL3
 // ==/UserScript==
 
@@ -29,13 +27,12 @@
     // API URLs
     const apiUrls = {
         "ipapi.co": "https://ipapi.co/{ip}/json",
-        "ipinfo.io": "https://ipinfo.io/{ip}/json",
         "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_9kY03l6G3CExGRBVfAqHQLIvOSj2m&ipAddress={ip}", // 需要替换API Key
         "ip-api.com": "http://ip-api.com/json/{ip}",
         "custom": "custom" // 添加自定义选项
     };
 
-    let currentApiUrl = GM_getValue("apiUrl", "https://ipinfo.io/{ip}/json");
+    let currentApiUrl = GM_getValue("apiUrl", "http://ip-api.com/json/{ip}");
 
     const cache = {};
 
@@ -76,38 +73,19 @@
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            let data = response.responseText;
-            if (currentApiUrl === apiUrls["cloudflare"]) {
-                const countryLine = data.split('\n').find(line => line.startsWith('loc='));
-                if (countryLine) {
-                    const countryCode = countryLine.split('=')[1];
-                    cache[ip] = { countryCode, city: null }; // 缓存结果
-                    insertLocation(countryCode, null);
-                } else {
-                    showTooltip("error", true);
-                }
+            let data = JSON.parse(response.responseText);
+            if (currentApiUrl === apiUrls["geoIpify"]) {
+                cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
+                insertLocation(data.location.country, data.location.city);
+            } else if (currentApiUrl === apiUrls["ip-api.com"]) {
+                cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
+                insertLocation(data.countryCode, data.city);
+            } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
+                cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
+                insertLocation(data.countryCode, data.city);
             } else {
-                data = JSON.parse(data);
-                let city = data.city;
-                if (currentApiUrl === apiUrls["ipinfo.io"]) {
-                    city = data.region;
-                    if (!city || !city.trim()) {
-                        city = data.city;
-                    }
-                }
-                if (currentApiUrl === apiUrls["geoIpify"]) {
-                    cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
-                    insertLocation(data.location.country, data.location.city);
-                } else if (currentApiUrl === apiUrls["ip-api.com"]) {
-                    cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
-                    insertLocation(data.countryCode, data.city);
-                } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
-                    cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
-                    insertLocation(data.countryCode, data.city);
-                } else {
-                    cache[ip] = { countryCode: data.country, city }; // 缓存结果
-                    insertLocation(data.country, city);
-                }
+                cache[ip] = { countryCode: data.country, city: data.city }; // 缓存结果
+                insertLocation(data.country, data.city);
             }
         } catch (error) {
             showTooltip(`error: ${error.message}`, true);
@@ -196,7 +174,6 @@
         selectedTextNode.parentNode.insertBefore(locationSpan, selectedTextNode);
         selectedTextNode.parentNode.insertBefore(afterIpTextNode, selectedTextNode);
 
-
         window.getSelection().empty();
     }
 
@@ -240,15 +217,19 @@
     function createSettingsUI() {
         const settingsDiv = document.createElement('div')
         settingsDiv.style.position = "fixed"
-        settingsDiv.style.top = "10px"
-        settingsDiv.style.right = "10px"
+        settingsDiv.style.bottom = "10px"
+        settingsDiv.style.right = "80px"
         settingsDiv.style.padding = "10px"
         settingsDiv.style.background = "white"
         settingsDiv.style.border = "1px solid black"
         settingsDiv.style.zIndex = "9999999"
+        settingsDiv.style.display = "flex"
+        settingsDiv.style.flexDirection = "column"
+        settingsDiv.style.width = "200px"
+        settingsDiv.style.fontSize = "12px"
 
         const apiUrlLabel = document.createElement('label')
-        apiUrlLabel.textContent = "API:"
+        apiUrlLabel.textContent = "IP Location Finder API option:"
         const apiUrlSelect = document.createElement('select');
         Object.keys(apiUrls).forEach(key => {
             const option = document.createElement("option");
@@ -261,7 +242,7 @@
 
         const customApiInput = document.createElement('input');
         customApiInput.type = "text"
-        customApiInput.placeholder = "Enter custom API URL"
+        customApiInput.placeholder = "Replace the API's IP with {ip}."
         customApiInput.style.display = (currentApiUrl === "custom" ? "block" : "none");
 
         settingsDiv.append(customApiInput);
