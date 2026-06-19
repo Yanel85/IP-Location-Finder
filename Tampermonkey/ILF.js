@@ -9,7 +9,6 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @connect      ipapi.co
-// @connect      geo.ipify.org
 // @connect      ip-api.com
 // @icon         https://raw.githubusercontent.com/Yanel85/IP-Location-Finder/refs/heads/main/extension/icon.svg
 // @license      GPL3
@@ -27,9 +26,8 @@
     // API URLs
     const apiUrls = {
         "ipapi.co": "https://ipapi.co/{ip}/json",
-        "geoIpify": "https://geo.ipify.org/api/v2/country,city?apiKey=at_9kY03l6G3CExGRBVfAqHQLIvOSj2m&ipAddress={ip}", // 需要替换API Key
         "ip-api.com": "http://ip-api.com/json/{ip}",
-        "custom": "custom" // 添加自定义选项
+        "custom": "custom"
     };
 
     let currentApiUrl = GM_getValue("apiUrl", "http://ip-api.com/json/{ip}");
@@ -74,13 +72,7 @@
             }
 
             let data = JSON.parse(response.responseText);
-            if (currentApiUrl === apiUrls["geoIpify"]) {
-                cache[ip] = { countryCode: data.location.country, city: data.location.city }; // 缓存结果
-                insertLocation(data.location.country, data.location.city);
-            } else if (currentApiUrl === apiUrls["ip-api.com"]) {
-                cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
-                insertLocation(data.countryCode, data.city);
-            } else if (currentApiUrl === apiUrls["bigDataCloud"]) {
+            if (currentApiUrl === apiUrls["ip-api.com"]) {
                 cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
                 insertLocation(data.countryCode, data.city);
             } else {
