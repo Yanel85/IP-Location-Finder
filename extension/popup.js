@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const optionsApiLabel = document.getElementById("optionsApiLabel");
     const customApiInput = document.getElementById("customApiUrl");
 
+    // Map option value (URL) → API name for failover chain
+    const URL_TO_NAME = {
+        "https://ipapi.co/{ip}/json": "ipapi.co",
+        "https://ipinfo.io/{ip}/json": "ipinfo.io",
+        "http://ip-api.com/json/{ip}": "ip-api.com"
+    };
+
     function updateLocaleText() {
         optionsTitle.textContent = chrome.i18n.getMessage("optionsTitle");
         optionsHeading.textContent = chrome.i18n.getMessage("optionsHeading");
@@ -13,35 +20,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateLocaleText();
 
-    chrome.storage.sync.get({ apiUrl: "https://ipapi.co/{ip}/json" }, (items) => {
+    chrome.storage.sync.get({ apiUrl: "https://ipapi.co/{ip}/json", startApi: "ipapi.co" }, (items) => {
         apiUrlSelect.value = items.apiUrl;
-        //if items.apiUrl is not in the select list, set it to custom
-        if (!Array.from(apiUrlSelect.options).map(option => option.value).includes
-            (items.apiUrl)) {
+        if (!Array.from(apiUrlSelect.options).map(o => o.value).includes(items.apiUrl)) {
             apiUrlSelect.value = "custom";
-            statusDiv.textContent = items.apiUrl;
+            customApiInput.style.display = "block";
+            customApiInput.value = items.apiUrl;
         }
     });
 
+    customApiInput.addEventListener("input", () => {
+        chrome.storage.sync.set({ apiUrl: customApiInput.value, startApi: "custom" }, () => {
+            statusDiv.textContent = chrome.i18n.getMessage("optionsSaved");
+            setTimeout(() => { statusDiv.textContent = ""; }, 1000);
+        });
+    });
+
     apiUrlSelect.addEventListener("change", () => {
-        const apiUrl = apiUrlSelect.value;
-        if (apiUrl === 'custom') {
-            customApiInput.style.display = 'block';
-            customApiInput.addEventListener('input', () => {
-                chrome.storage.sync.set({ apiUrl: customApiInput.value }, () => {
-                    statusDiv.textContent = chrome.i18n.getMessage("optionsSaved");
-                    setTimeout(() => {
-                        statusDiv.textContent = "";
-                    }, 1000);
-                });
-            });
+        const val = apiUrlSelect.value;
+        if (val === "custom") {
+            customApiInput.style.display = "block";
         } else {
-            customApiInput.style.display = 'none';
-            chrome.storage.sync.set({ apiUrl: apiUrl }, () => {
+            customApiInput.style.display = "none";
+            const startApi = URL_TO_NAME[val] || "ipapi.co";
+            chrome.storage.sync.set({ apiUrl: val, startApi }, () => {
                 statusDiv.textContent = chrome.i18n.getMessage("optionsSaved");
-                setTimeout(() => {
-                    statusDiv.textContent = "";
-                }, 1000);
+                setTimeout(() => { statusDiv.textContent = ""; }, 1000);
             });
         }
     });

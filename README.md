@@ -12,6 +12,8 @@
 *   **Automatic IP Detection:** Automatically detects IP addresses (IPv4 and IPv6) when you select text on a webpage.
 *   **Geographic Location:** Displays the country and city (when available) associated with the selected IP address.
 *   **Flag Icon & Country Code:** Displays a flag icon and country code alongside the location information.
+*   **API Failover:** Automatically switches to the next API if the current one times out or fails, ensuring reliable lookups.
+*   **Loading Indicator:** Shows a spinning animation on the icon while the IP location is being queried.
 *   **Flexible API:** Uses an external API for IP geolocation lookup, with customizable API options in the extension's settings.
 *   **Clean Display:** Displays the location in the format: `(FlagIcon CountryCode, City)`. If city is unavailable, only shows `(FlagIcon CountryCode)`.
 
@@ -42,10 +44,10 @@
 
 You can customize the extension in the popup window:
 
-*   **Select API:** Choose from a list of predefined API URLs for the IP location lookup. Custom supports.
+*   **Select API:** Choose from a list of predefined API URLs for the IP location lookup. If the selected API fails or times out, the extension automatically tries the next one in the failover chain.
     *   `ipapi.co`
     *   `ipinfo.io`
-    *   `GeoIpify`
+    *   `ip-api.com`
     *   `custom`
 
 ## Third-Party Libraries

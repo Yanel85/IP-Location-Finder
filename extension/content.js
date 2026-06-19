@@ -2,9 +2,12 @@ let ipIcon;
 let currentSelectedText;
 let tooltip;
 let locationSpanElementMap = new Map();
+let isLoading = false;
 
 // Get SVG icon URL
 const ipIconUrl = chrome.runtime.getURL("icon.svg");
+// Loading spinner SVG (inline data URI)
+const loadingIconUrl = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10" /></svg>`);
 
 // Event listener for mouseup
 document.addEventListener('mouseup', handleMouseUp);
@@ -50,27 +53,44 @@ function removeIcon(ipText) {
     }
 }
 
+// Toggle loading state on the icon
+function setLoading(on) {
+    if (!ipIcon) return;
+    isLoading = on;
+    if (on) {
+        ipIcon.src = loadingIconUrl;
+        ipIcon.classList.add("loading");
+    } else {
+        ipIcon.src = ipIconUrl;
+        ipIcon.classList.remove("loading");
+    }
+}
+
 // Send IP location query
 async function queryIpLocation(ip) {
     console.log("content.js: queryIpLocation called, ip:", ip);
+    setLoading(true);
     try {
-        const response = await chrome.runtime.sendMessage({
+        await chrome.runtime.sendMessage({
             type: 'queryIp',
             ip
         });
-        console.log("content.js: queryIpLocation response", response);
     } catch (error) {
         console.error("content.js: Error sending message:", error);
+        setLoading(false);
     }
 }
 
 // Handle messages from background script
 chrome.runtime.onMessage.addListener((message) => {
     if (message.type === "ipLocation") {
+        setLoading(false);
         insertLocation(message.country, message.city);
     } else if (message.type === "error") {
+        setLoading(false);
         showTooltip(message.message, true);
     } else if (message.type === "info") {
+        setLoading(false);
         showTooltip(message.msg, false);
     }
 });
