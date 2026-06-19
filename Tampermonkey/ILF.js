@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IP Location Finder
 // @namespace    https://github.com/Yanel85/IP-Location-Finder/
-// @version      1.4
+// @version      1.5
 // @description  Finds the geographical location of IP addresses on a page.
 // @author       Perry Yen
 // @match        *://*/*
@@ -9,6 +9,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @connect      ipapi.co
+// @connect      ipinfo.io
 // @connect      ip-api.com
 // @icon         https://raw.githubusercontent.com/Yanel85/IP-Location-Finder/refs/heads/main/extension/icon.svg
 // @license      GPL3
@@ -21,16 +22,15 @@
     let tooltip;
     let locationSpanElementMap = new Map();
 
-    const ipIconUrl = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMTEuOTk5NyAxLjk5OTk2QzguMTMzOSAxLjk5OTk2IDQuOTk5NzQgNS4xMzQwMiA0Ljk5OTc0IDguOTk5OTZDMjkuMTkzNSA4Ljk5OTk2IDExLjk5OTcgMTYuMDAwMyAxMS45OTk3IDE2LjAwMDNDMTEuOTk5NyAxNi4wMDAzIDE0Ljg2NTQgOC45OTk5NiAyMC45OTk3IDguOTk5OTZDMTkuMTkzNSA4Ljk5OTk2IDE1Ljk5OTcgNS4xMzQwMiAxMS45OTk3IDEuOTk5OTZaIiBmaWxsPSIjMTA5NkRiIi8+CiAgPHBhdGggZD0iTTEyIDExLjk5OTlDMTMuNjU2OSAxMS45OTk5IDE1IDEwLjY1NjggMTUgOC45OTk5M0MxNSA3LjM0MzA5IDEzLjY1NjkgNi4wMDAwNyAxMiA2LjAwMDA3QzEwLjM0MzEgNi4wMDAwNyA5IDcuMzQzMDkgOSA4Ljk5OTkzQzkgMTAuNjU2OCA4LjM0MzE0IDExLjk5OTkgMTIgMTEuOTk5OVoiIGZpbGw9IiMxMDk2RGIiLz4KICA8cGF0aCBkPSJNMTEuOTk5NyAxNy45OTk2QzkuMzI3NjcgMTcuOTk5NiAzLjMzOTYyIDE5LjMzMTcgMy4zMzk2MiAyMi45OTk2VjIzLjOTk2SDIxLjY1OTVWMjIuOTk5NkMzMS42NTk1IDIwLjMzMTcgMTYuNjkxNCAxNy45OTk2IDExLjk5OTcgMTcuOTk5NloiIGZpbGw9IiMxMDk2RGIiLz4KPC9zdmc+";
-
     // API URLs
     const apiUrls = {
         "ipapi.co": "https://ipapi.co/{ip}/json",
-        "ip-api.com": "http://ip-api.com/json/{ip}",
+        "ipinfo.io": "https://ipinfo.io/{ip}/json",
+        "ip-api.com": "https://ip-api.com/json/{ip}",
         "custom": "custom"
     };
 
-    let currentApiUrl = GM_getValue("apiUrl", "http://ip-api.com/json/{ip}");
+    let currentApiUrl = GM_getValue("apiUrl", "https://ip-api.com/json/{ip}");
 
     const cache = {};
 
@@ -40,18 +40,16 @@
     // Handle mouseup event
     function handleMouseUp() {
         removeTooltip();
-        //removeIcon(currentSelectedText);
         const selectedText = window.getSelection().toString().trim();
 
         if (selectedText && isValidIP(selectedText)) {
             currentSelectedText = selectedText;
-            //showIcon();
             queryIpLocation(currentSelectedText);
         }
     }
 
 
-    // Send IP location query
+    // Send IP location query with automatic API failover
     async function queryIpLocation(ip) {
         // 检查缓存
         if (cache[ip]) {
@@ -60,25 +58,55 @@
             return;
         }
 
-        try {
-            let apiUrl = currentApiUrl;
-            if (currentApiUrl !== apiUrls["custom"]) {
-                apiUrl = currentApiUrl.replace("{ip}", ip);
-            }
+        // API 级联顺序（非 custom 时按此顺序尝试）
+        const apiChain = ["ip-api.com", "ipapi.co", "ipinfo.io"];
 
-            const response = await GM_xmlhttpRequestPromise(apiUrl);
-            if (response.status !== 200) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            let data = JSON.parse(response.responseText);
-            if (currentApiUrl === apiUrls["ip-api.com"]) {
-                cache[ip] = { countryCode: data.countryCode, city: data.city }; // 缓存结果
-                insertLocation(data.countryCode, data.city);
+        const tryApis = async () => {
+            // 确定要尝试的 API 列表
+            let apisToTry;
+            if (currentApiUrl === apiUrls["custom"]) {
+                apisToTry = ["custom"];
             } else {
-                cache[ip] = { countryCode: data.country, city: data.city }; // 缓存结果
-                insertLocation(data.country, data.city);
+                // 找到当前 API 在级联链中的位置，从它开始往后试
+                const currentKey = Object.keys(apiUrls).find(k => apiUrls[k] === currentApiUrl);
+                if (currentKey && apiChain.includes(currentKey)) {
+                    const idx = apiChain.indexOf(currentKey);
+                    apisToTry = [...apiChain.slice(idx), ...apiChain.slice(0, idx)];
+                } else {
+                    apisToTry = [...apiChain];
+                }
             }
+
+            let lastError;
+            for (const apiKey of apisToTry) {
+                const apiUrl = apiKey === "custom"
+                    ? currentApiUrl.replace("{ip}", ip)
+                    : apiUrls[apiKey].replace("{ip}", ip);
+
+                try {
+                    const response = await GM_xmlhttpRequestPromise(apiUrl);
+                    if (response.status === 200) {
+                        let data = JSON.parse(response.responseText);
+                        let result;
+                        if (apiKey === "ip-api.com") {
+                            result = { countryCode: data.countryCode, city: data.city };
+                        } else {
+                            result = { countryCode: data.country, city: data.city };
+                        }
+                        cache[ip] = { countryCode: result.countryCode, city: result.city };
+                        insertLocation(result.countryCode, result.city);
+                        return; // 成功，退出
+                    }
+                    lastError = new Error(`HTTP ${response.status} (${apiKey})`);
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+            throw lastError || new Error("All APIs failed");
+        };
+
+        try {
+            await tryApis();
         } catch (error) {
             showTooltip(`error: ${error.message}`, true);
         }
@@ -251,7 +279,7 @@
                 currentApiUrl = selectedValue;
             }
             GM_setValue("apiUrl", currentApiUrl);
-            customApiInput.style.display = (currentApiUrl === "custom" ? "block" : "none");
+            customApiInput.style.display = (currentApiUrl === apiUrls["custom"] ? "block" : "none");
             statusDiv.textContent = "Settings Saved"
             setTimeout(() => {
                 statusDiv.textContent = "";
@@ -264,7 +292,7 @@
 
         apiUrlSelect.addEventListener("change", (event) => {
             const selectedValue = event.target.value;
-            customApiInput.style.display = (selectedValue === "custom" ? "block" : "none");
+            customApiInput.style.display = (selectedValue === apiUrls["custom"] ? "block" : "none");
         })
 
         document.body.appendChild(settingsDiv)
