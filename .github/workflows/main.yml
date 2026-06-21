@@ -1,39 +1,54 @@
-name: Package and Release Extension
+name: Package and Release
 
 on:
   workflow_dispatch: # Allow manual trigger
 
 jobs:
   build:
-    name: Upload Release Asset
+    name: Build and Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Zip Extension Folder 
+        uses: actions/checkout@v4
+
+      - name: Read version from manifest
+        id: version
         run: |
-            cd extension
-            zip -r ../IP-Location-Finder.zip .
-            cd ..
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+          VERSION=$(grep -oP '"version"\s*:\s*"\K[^"]+' extension/manifest.json)
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Package Extension
+        run: |
+          cd extension
+          zip -r ../IP-Location-Finder-v${{ steps.version.outputs.version }}.zip . \
+            -x "*.DS_Store" "*.DS_Store?"
+          cd ..
+
+      - name: Check if release exists
+        id: check_release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v1.5.0
-          release_name: Release v1.5.0
-          body: |
-            This release contains the packaged extension.
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "v${{ steps.version.outputs.version }}" > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Delete existing release
+        if: steps.check_release.outputs.exists == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./IP-Location-Finder.zip
-          asset_name: IP-Location-Finder.zip
-          asset_content_type: application/zip
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release delete "v${{ steps.version.outputs.version }}" --yes
+
+      - name: Create Release and Upload Asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            "IP-Location-Finder-v${{ steps.version.outputs.version }}.zip" \
+            --title "Release v${{ steps.version.outputs.version }}" \
+            --notes "Release v${{ steps.version.outputs.version }} of IP Location Finder extension."
